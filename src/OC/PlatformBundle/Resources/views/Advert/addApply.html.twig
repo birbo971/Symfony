@@ -1,0 +1,14 @@
+{# src/OC/PlatformBundle/Resources/views/Advert/add.html.twig #}
+
+{% extends "OCCoreBundle::layoutCoreBundle.html.twig" %}
+
+{% block body %}
+
+
+    {{ include("OCPlatformBundle:Advert:formApply.html.twig") }}
+
+    <p class="alert alert-danger">
+        Attention : sera ajoutée directement sur la page d'accueil après validation du formulaire.
+    </p>
+
+{% endblock %}

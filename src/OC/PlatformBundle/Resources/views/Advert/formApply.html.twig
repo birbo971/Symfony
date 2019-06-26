@@ -1,0 +1,43 @@
+{# src/OC/PlatformBundle/Resources/views/Advert/form.html.twig #}
+
+<h3>Postuler a une annonce</h3>
+
+{# On laisse vide la vue pour l'instant, on la comblera plus tard
+   lorsqu'on saura afficher un formulaire. #}
+<div class="form-group">
+
+    {{ form_start(formApply, {'attr': {'class': 'form-horizontal'}}) }}
+
+    {# Les erreurs générales du formulaire. #}
+    {{ form_errors(formApply) }}
+
+    {# Génération du label + error + widget pour un champ. #}
+    {% if form.date is defined %}
+        {{ form_row(formApply.date) }}
+    {% endif %}
+
+</div>
+
+{# Idem pour un autre champ. #}
+<div class="col-sm-10">
+    {{ form_row(formApply.author) }}
+    {{ form_errors(formApply.author) }}
+</div>
+<div class="form-group">
+    {{ form_label(formApply.content, "Contenu", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+    {{ form_errors(formApply.content) }}
+    <div class="col-sm-10">
+        {{ form_widget(formApply.content, {'attr': {'class': 'form-control'}}) }}
+    </div>
+</div>
+<div class="col-sm-10">
+    {{ form_row(formApply.email) }}
+    {{ form_errors(formApply.email) }}
+</div>
+{# Génération automatique des champs pas encore écrits.
+     Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)
+     et tous les champs cachés (type « hidden »). #}
+{{ form_rest(formApply) }}
+
+{# Fermeture de la balise <form> du formulaire HTML #}
+{{ form_end(formApply) }}

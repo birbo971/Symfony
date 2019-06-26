@@ -1,0 +1,69 @@
+services:
+    oc_platform.antispam:
+        class: OC\PlatformBundle\Antispam\OCAntispam
+        arguments:
+        - "@mailer"
+        - 50
+        calls:
+        - [ setLocale, [%locale%] ]
+    oc_platform.email.application_mailer:
+        class: OC\PlatformBundle\Email\ApplicationMailer
+        arguments:
+          - "@mailer"
+    oc_platform.doctrine_listener.application_creation:
+        class: OC\PlatformBundle\DoctrineListener\ApplicationCreationListener
+        arguments:
+        - "@oc_platform.email.application_mailer"
+        tags:
+        - { name: doctrine.event_listener, event: postPersist }
+    OC\PlatformBundle\DataFixtures\ORM\LoadCategory:
+        tags: [doctrine.fixture.orm]
+    OC\PlatformBundle\DataFixtures\ORM\LoadSkill:
+        tags: [doctrine.fixture.orm]
+    oc_platform.validator.antiflood:                              # Le nom du service
+        class: OC\PlatformBundle\Validators\AntifloodValidator     # La classe du service, ici notre validateur déjà créé
+        arguments: ["@request_stack", "@doctrine.orm.entity_manager"] # Les données qu'on injecte au service : la requête et l'EntityManager
+        tags:
+            - { name: validator.constraint_validator, alias: oc_platform_antiflood }  # C'est avec l'alias qu'on retrouvera le service
+    oc_platform.twig.antispam_extension:
+        class: OC\PlatformBundle\Twig\AntispamExtension
+        arguments:
+        - "@oc_platform.antispam"
+        tags:
+        -  { name: twig.extension }
+    oc_platform.form.ckeditor:
+        class: OC\PlatformBundle\Form\CkeditorType
+        tags:
+        - { name: form.type, alias: ckeditor }
+    oc_platform.beta.html:
+        class: OC\PlatformBundle\Beta\BetaHTML
+
+    oc_platform.beta.listener:
+        class: OC\PlatformBundle\Beta\BetaListener
+        arguments: ["@oc_platform.beta.html", "2013-10-20"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: processBeta }
+
+    oc_platform.bigbrother.message_notificator:
+        class: OC\PlatformBundle\Bigbrother\MessageNotificator
+        arguments:
+          - "@mailer"
+
+    oc_platform.bigbrother.message_listener:
+        class: OC\PlatformBundle\Bigbrother\MessageListener
+        arguments:
+          - "@oc_platform.bigbrother.message_notificator"
+          - ["alexandre", "marine", "pierre"]
+        tags:
+          - { name: kernel.event_listener, event: oc_platform.post_message, method: processMessage }
+    oc_platform.bigbrother.message_listener:
+        class: OC\PlatformBundle\Bigbrother\MessageListener
+        arguments:
+        - "@oc_platform.bigbrother.message_notificator"
+        - ["alexandre", "marine", "pierre"]
+        tags:
+        - { name: kernel.event_subscriber }
+    oc_platform.paramconverter.json:
+        class: OC\PlatformBundle\ParamConverter\JsonParamConverter
+        tags:
+        - { name: request.param_converter }

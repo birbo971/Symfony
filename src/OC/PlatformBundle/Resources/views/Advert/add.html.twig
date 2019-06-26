@@ -1,0 +1,15 @@
+{# src/OC/PlatformBundle/Resources/views/Advert/add.html.twig #}
+
+{% extends "OCCoreBundle::layoutCoreBundle.html.twig" %}
+
+{% block body %}
+
+    <h2>Ajouter une annonce</h2>
+
+    {{ include("OCPlatformBundle:Advert:form.html.twig") }}
+
+    <p class="alert alert-danger">
+        <b>Attention</b> : cette annonce sera ajoutée directement sur la page d'accueil après validation du formulaire.
+    </p>
+
+{% endblock %}

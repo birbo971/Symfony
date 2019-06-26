@@ -1,0 +1,62 @@
+{# src/OC/PlatformBundle/Resources/views/layout.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+        {% block title %}OC Plateforme{% endblock %}
+    </title>
+
+    {% block stylesheets %}
+        {# On charge le CSS de bootstrap depuis le site directement #}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    {% endblock %}
+</head>
+
+{% block body %}
+
+    {# On définit un sous-titre commun à toutes les pages du bundle, par exemple #}
+    <h1 class="display-1 text-center">Annonces</h1>
+            <div class="row">
+                <div id="menu" class="col-md-3">
+                    <h3>Les annonces</h3>
+                    <ul class="nav nav flex-column">
+                        <li>
+                            <a href="{{ path('oc_core_homepage') }}">Accueil</a>
+                        </li>
+                            {# On n'affiche le lien « Ajouter une annonce » qu'aux auteurs
+                            (et admins, qui héritent du rôle auteur) #}
+                            {% if is_granted('ROLE_USER') %}
+                                <li>
+                                    <a href="{{ path('oc_platform_add') }}">Ajouter une annonce</a>
+                                </li>
+                            {% endif %}
+                    </ul>
+
+                    <h4>Dernières annonces</h4>
+                    {{ render(controller("OCPlatformBundle:Advert:menu", {'limit': 3})) }}
+                </div>
+                <div id="content" class="col-md-9">
+                    {% block ocplatform_body %}{% endblock %}
+                </div>
+            </div>
+    <hr>
+
+    {# On définit un nouveau bloc, que les vues du bundle pourront remplir #}
+
+
+{% endblock %}
+<footer>
+    <p>The sky's the limit ©
+        {{ 'now'|date('Y') }}
+        and beyond.</p>
+</footer>
+</div>
+
+{% block javascripts %}
+{# Ajoutez ces lignes JavaScript si vous comptez vous servir des fonctionnalités du bootstrap Twitter #}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+{% endblock %}

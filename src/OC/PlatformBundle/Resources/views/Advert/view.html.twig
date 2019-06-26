@@ -1,0 +1,71 @@
+{# src/OC/PlatformBundle/Resources/view/Advert/view.html.twig #}
+{% extends "OCCoreBundle::layoutCoreBundle.html.twig" %}
+
+
+
+{% block body %}
+{# On vérifie qu'une image soit bien associée à l'annonce #}
+{% if advert.image is not null %}
+    <img src="{{ asset(advert.image.webPath) }}" alt="{{ advert.image.alt }}"/>
+{% endif %}<br/>
+    <h2>{{ advert.title }}</h2>
+    <i>Par
+        {{ advert.author }}, le
+        {{ advert.date|date('d/m/Y') }}</i>
+<div class="card card-body bg-light">
+        {{ advert.content }}
+
+
+{% if listAdvertSkills | length > 0 %}
+    <div>
+        Cette annonce requiert les compétences suivantes :
+        <ul>
+            {% for advertSkill in listAdvertSkills %}
+                <li>{{ advertSkill.skill.name }}
+                    : niveau
+                    {{ advertSkill.level }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    </div>
+{% if not advert.categories.empty %}
+<br/>
+    <p>
+        Cette annonce est parue dans les catégories suivantes :
+        {% for category in advert.categories %}
+    <p style="display:inline;">{{ category.name }},<br/></p>
+            {% if not loop.last %}
+            {% endif %}
+        {% endfor %}
+    </p>
+{% endif %}
+    <p>
+<a href="{{ path('oc_platform_home') }}" class="btn btn-light">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Retour à la liste
+        </a>
+<a href="{{ path('oc_platform_edit', {'id': advert.id}) }}" class="btn btn-light">
+            <i class="glyphicon glyphicon-edit"></i>
+            Modifier l'annonce
+        </a>
+        <a href="{{ path('oc_platform_delete', {'id': advert.id}) }}" class="btn btn-danger">
+            <i class="glyphicon glyphicon-trash"></i>
+            Supprimer l'annonce
+        </a>
+    </p>
+<p class="h4">Ils ont postulés a cette annonce.</p>
+<div class="card card-inverse bg-light text-center">
+<li>
+<a href="{{ path('oc_platform_addapply',  {'id': advert.id}) }}">Postuler à cette annonce</a>
+</li>
+{% for advert in listApplications %}
+    <p>{{ advert.advert_id }}</p>
+    <p class="h6">{{ advert.author }}</p>
+    <p>{{ advert.content }}</p>
+    <p>{{ advert.date|date('d/m/Y') }}</p>
+    <p>{{ advert.email }}</p>
+    
+{% endfor %}<br/>
+</div>
+{% endblock %}
